@@ -1,0 +1,33 @@
+# Ignore node_modules in any folder
+**/node_modules/
+
+# Ignore IDE settings
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+
+# Ignore build and target directories
+**/target/
+**/build/
+
+# Ignore Spring Tool Suite (STS) files
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# Ignore NetBeans files
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Misc
+HELP.md
+!.mvn/wrapper/maven-wrapper.jar
