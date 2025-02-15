@@ -1,5 +1,7 @@
 package com.backend.resume.controller;
 
+import com.backend.resume.service.ResumeProducer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,30 +14,17 @@ import java.io.IOException;
 @RequestMapping("/api/resumes")
 public class FileUploadController {
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
-        try {
-            // Define the absolute path to the uploads directory
-            String uploadDir = "C:\\Users\\Admin\\IdeaProjects\\ResumeFix\\backend\\src\\main\\resources\\uploads";
+    @Autowired
+    private ResumeProducer resumeProducer;
 
-            // Create the directory if it doesn't exist
-            File dir = new File(uploadDir);
-            if (!dir.exists()) {
-                dir.mkdirs(); // Create all necessary parent directories
-            }
 
-            // Define the full file path
-            String filePath = uploadDir + File.separator + file.getOriginalFilename();
-            System.out.println("Saving file to: " + filePath);
-
-            // Save the file
-            File dest = new File(filePath);
-            file.transferTo(dest);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    @PostMapping("/upload-resume")
+    public  ResponseEntity<String> uploadResume(@RequestParam("file") MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is missing");
         }
+        byte[] resumeBytes = file.getBytes();
+        resumeProducer.sendResume(resumeBytes);
         return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename());
-
     }
 }
