@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+
 import java.io.IOException;
 
 @RestController
@@ -20,11 +20,12 @@ public class FileUploadController {
 
     @PostMapping("/upload-resume")
     public  ResponseEntity<String> uploadResume(@RequestParam("file") MultipartFile file) throws IOException {
+        String resumeId = String.valueOf(Math.random()%10);
         if (file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is missing");
         }
         byte[] resumeBytes = file.getBytes();
-        resumeProducer.sendResume(resumeBytes);
+        resumeProducer.sendResume(resumeBytes, resumeId);
         return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename());
     }
 }

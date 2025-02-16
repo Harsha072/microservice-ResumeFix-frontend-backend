@@ -11,4 +11,9 @@ public class RabbitMQConfig {
     public Queue queue() {
         return new Queue("resume_queue", true); // Durable queue
     }
+
+    @Bean
+    public Queue feedbackQueue() {
+        return new Queue("feedback_queue", true); // Durable queue
+    }
 }
