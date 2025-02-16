@@ -9,10 +9,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class ResumeConsumer {
 
-private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+
+    // Constructor for dependency injection
+    public ResumeConsumer(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @RabbitListener(queues = "feedback_queue")
     public void receiveFeedback(String feedbackJson) {
+        System.out.println(feedbackJson);
         try {
             // Parse the feedback JSON
             Feedback feedback = objectMapper.readValue(feedbackJson, Feedback.class);

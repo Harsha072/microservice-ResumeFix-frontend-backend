@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/resumes")
@@ -20,12 +21,16 @@ public class FileUploadController {
 
     @PostMapping("/upload-resume")
     public  ResponseEntity<String> uploadResume(@RequestParam("file") MultipartFile file) throws IOException {
-        String resumeId = String.valueOf(Math.random()%10);
+        String resumeId = UUID.randomUUID().toString();
         if (file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is missing");
         }
-        byte[] resumeBytes = file.getBytes();
-        resumeProducer.sendResume(resumeBytes, resumeId);
-        return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename());
+        try {
+            byte[] resumeBytes = file.getBytes();
+            resumeProducer.sendResume(resumeBytes, resumeId);
+            return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename());
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process the file");
+        }
     }
 }
